@@ -48,6 +48,11 @@ contract BountyBuddy {
         require(bounties[bountyId].bountyState == BountyState.Open);
         _;
     }
+
+    modifier mustBeSubmitted(uint submissionId) {
+      require(submissions[submissionId].submissionState == SubmissionState.Submitted);
+      _;
+    }
   
 
     function createBounty(string description, uint amount) public returns(uint) {
@@ -107,6 +112,10 @@ contract BountyBuddy {
         description = submissions[_submissionId].description;
         submissionState = uint(submissions[_submissionId].submissionState);
         return (bountyId, submissionId, submitter, description, submissionState);
+    }
+
+    function listSubmissions(uint bountyId, uint submissionId) public mustBeSubmitted(submissionId) returns(string) {
+        
     }
   
 

@@ -33,7 +33,7 @@ contract('BountyBuddy', function(accounts) {
     assert.equal(eventEmitted, true, 'creating a bounty should emit an Open event')
   });
 
-  it("...should let a user make a submission for review.", async() => {
+  it("...should let a user create a submission for review.", async() => {
     const bountyBuddyInstance = await BountyBuddy.deployed()
 
     const amount = web3.toWei(0.1, "ether")
@@ -65,5 +65,22 @@ contract('BountyBuddy', function(accounts) {
     assert.equal(eventEmitted, true, 'creating a submission should emit a Submitted event')
 
   })
+
+  it("...should let a user see a list of submissions for a bounty", async() => {
+    const bountyBuddyInstance = await BountyBuddy.deployed();
+
+    const amount = 1;
+    const description = "My description";
+
+    const bounty1id = (
+      await bountyBuddyInstance.createBounty(description, amount, {from: alice})
+    ).logs[0].args.bountyId.toString(10);
+
+    const bounty2id = (
+      await bountyBuddyInstance.createBounty(description, amount, {from: alice})
+    ).logs[0].args.bountyId.toString(10);
+
+    console.log('bounties', bounty1id, bounty2id);
+  } )
 
 });
