@@ -8,7 +8,8 @@ contract BountyBuddy {
 
     mapping(uint => Bounty) public bounties;
     mapping(uint => Submission) public submissions;
-    mapping(uint => mapping( uint => uint)) public bounties_submissions;
+    mapping(uint => mapping(uint => uint)) public bounties_submissions;
+    mapping(address => uint[]) public users_bounties;
 
     enum BountyState { Open, Closed }
     enum SubmissionState { Submitted, Accepted, Rejected, Paid }
@@ -50,7 +51,22 @@ contract BountyBuddy {
     }
 
     modifier mustBeSubmitted(uint submissionId) {
-      require(submissions[submissionId].submissionState == SubmissionState.Submitted);
+        require(submissions[submissionId].submissionState == SubmissionState.Submitted);
+        _;
+    }
+
+    modifier mustBeOpen(uint bountyId) {
+        require(bounties[bountyId].bountyState == BountyState.Open);
+        _;
+    }
+
+    modifier onlyBountyOwner(uint bountyId) {
+        require(bounties[bountyId].creator == msg.sender);
+        _;
+    }
+
+    modifier mustBeAccepted(uint submissionId) {
+      require(submissions[submissionId].submissionState == SubmissionState.Accepted);
       _;
     }
   
@@ -67,20 +83,25 @@ contract BountyBuddy {
             bountyState: BountyState.Open
         });
         bountyCount = bountyCount + 1;
+        users_bounties[msg.sender].push(bountyId);
         return bountyId;
     }
 
     function createSubmission(uint bountyId, string description) public bountyMustBeOpen(bountyId) returns(uint) {
         uint submissionId = submissionCount;
+        uint submissionIndex = bounties[bountyId].numSubmissions;
+        
         emit Submitted(bountyId, submissionId);
+
         submissions[submissionId] = Submission({
             bountyId: bountyId,
-            submissionId: submissionCount,
+            submissionId: submissionId,
             submitter: msg.sender,
             description: description,
             submissionState: SubmissionState.Submitted
         });
-        bounties_submissions[bountyId][bounties[bountyId].numSubmissions] = submissionCount;
+        
+        bounties_submissions[bountyId][submissionIndex] = submissionId;
         submissionCount = submissionCount + 1;
         bounties[bountyId].numSubmissions = bounties[bountyId].numSubmissions + 1;
         return submissionId;
@@ -92,6 +113,21 @@ contract BountyBuddy {
 
     function getSubmissionCount() public view returns(uint) {
         return submissionCount;
+    }
+
+    function getBountySubmissionCount(uint bountyId) public view returns(uint) {
+        return bounties[bountyId].numSubmissions;
+    }
+
+    function getBountySubmissionIdByIndex(uint bountyId, uint index) public view returns(uint) {
+        require(bountyId < bountyCount);
+        require(index < bounties[bountyId].numSubmissions);
+        return bounties_submissions[bountyId][index];
+    }
+
+    function getUserBountyIdByIndex(address who, uint index) public view returns(uint) {
+        require(index < users_bounties[who].length);
+        return users_bounties[who][index];
     }
 
     function fetchBounty(uint _bountyId) public view returns(uint bountyId, address creator, uint amount, string description, uint numSubmissions, uint bountyState) {
@@ -114,9 +150,25 @@ contract BountyBuddy {
         return (bountyId, submissionId, submitter, description, submissionState);
     }
 
-    function listSubmissions(uint bountyId, uint submissionId) public mustBeSubmitted(submissionId) returns(string) {
-        
+    function userNumBounties(address _who) public view returns(uint) {
+        return users_bounties[_who].length;
     }
+
+    function acceptSubmission(uint bountyId, uint submissionId) public mustBeSubmitted(submissionId) onlyBountyOwner(bountyId) mustBeOpen(bountyId) returns(bool) {
+        submissions[submissionId].submissionState = SubmissionState.Accepted;
+        bounties[bountyId].bountyState = BountyState.Closed;
+        emit Accepted(bountyId, submissionId);
+        emit Closed(bountyId);
+        return true;
+    }
+
+    function rejectSubmission(uint bountyId, uint submissionId) public mustBeSubmitted(submissionId) onlyBountyOwner(bountyId) mustBeOpen(bountyId) returns(bool) {
+        submissions[submissionId].submissionState = SubmissionState.Rejected;
+        emit Rejected(bountyId, submissionId);
+        return true;
+    }
+
+    function payBounty(uint bountyId, uint submissionId, uint amount)
   
 
 }
