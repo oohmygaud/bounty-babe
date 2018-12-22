@@ -15,9 +15,9 @@ contract('BountyBuddy', function(accounts) {
     const bountyBuddyInstance = await BountyBuddy.deployed()
 
     const amount = web3.toWei(0.1, "ether")
-    const description = "My description"
+    const description = "My description";
 
-    const tx = await bountyBuddyInstance.createBounty(description, amount, {from: alice})
+    const tx = await bountyBuddyInstance.createBounty(description, {from: alice, value: amount})
     if (tx.logs[0].event == "Open") {
       bountyId = tx.logs[0].args.bountyId.toString(10)
       eventEmitted = true
@@ -45,7 +45,7 @@ contract('BountyBuddy', function(accounts) {
     const amount = web3.toWei(0.1, "ether")
     const description = "My description"
 
-    const bountyTx = await bountyBuddyInstance.createBounty(description, amount, {from: alice})
+    const bountyTx = await bountyBuddyInstance.createBounty(description, {from: alice, value: amount})
     if (bountyTx.logs[0].event == "Open") {
       bountyId = bountyTx.logs[0].args.bountyId.toString(10)
     }
@@ -79,11 +79,11 @@ contract('BountyBuddy', function(accounts) {
     const description = "My description"
 
     const bounty1id = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: alice})
+      await bountyBuddyInstance.createBounty(description, {from: alice, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     const bounty2id = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: alice})
+      await bountyBuddyInstance.createBounty(description, {from: alice, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     const submission1id = (
@@ -113,15 +113,15 @@ contract('BountyBuddy', function(accounts) {
     const description = "My description"
 
     const user1bounty1 = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: charlie})
+      await bountyBuddyInstance.createBounty(description, {from: charlie, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     const user1bounty2 = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: charlie})
+      await bountyBuddyInstance.createBounty(description, {from: charlie, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     const user2bounty1 = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: dave})
+      await bountyBuddyInstance.createBounty(description, {from: dave, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     assert.equal(await bountyBuddyInstance.userNumBounties.call(charlie), 2, 'number of bounties for charlie is 2')
@@ -139,7 +139,7 @@ contract('BountyBuddy', function(accounts) {
     const description = "My description"
 
     const bounty1 = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: charlie})
+      await bountyBuddyInstance.createBounty(description, {from: charlie, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     const submission1 = (
@@ -148,7 +148,7 @@ contract('BountyBuddy', function(accounts) {
     
     let reverted = false;
     try {
-      const failTx = await bountyBuddyInstance.acceptSubmission(bounty1, submission1, {from:dave});
+      const failTx = await bountyBuddyInstance.acceptSubmission(bounty1, submission1, {from: dave});
     } catch (e) {
       reverted = true;
     }
@@ -180,7 +180,7 @@ contract('BountyBuddy', function(accounts) {
     const description = "My description"
 
     const bounty1 = (
-      await bountyBuddyInstance.createBounty(description, amount, {from: charlie})
+      await bountyBuddyInstance.createBounty(description, {from: charlie, value: amount})
     ).logs[0].args.bountyId.toString(10)
 
     const submission1 = (
@@ -189,7 +189,7 @@ contract('BountyBuddy', function(accounts) {
     
     let reverted = false
     try {
-      const failTx = await bountyBuddyInstance.rejectSubmission(bounty1, submission1, {from:dave})
+      const failTx = await bountyBuddyInstance.rejectSubmission(bounty1, submission1, {from: dave})
     } catch (e) {
       reverted = true
     }
@@ -201,7 +201,7 @@ contract('BountyBuddy', function(accounts) {
     assert.equal(failBountyResult[5].toString(10), 0, 'the state of the bounty should be "Open"')
     assert.equal(failSubmissionResult[4].toString(10), 0, 'the state of the submission should be "Submitted"')
 
-    const rejectTx = await bountyBuddyInstance.rejectSubmission(bounty1, submission1, {from:charlie})
+    const rejectTx = await bountyBuddyInstance.rejectSubmission(bounty1, submission1, {from: charlie})
 
     assert.equal(rejectTx.logs[0].event, "Rejected", "Rejected event should be emitted")
 
@@ -213,7 +213,36 @@ contract('BountyBuddy', function(accounts) {
   })
 
   it("...should pay the submitter the accepted bounty", async() => {
-    assert.equal(true, false)
+    const bountyBuddyInstance = await BountyBuddy.deployed()
+
+    const amountWei = 500000000000000000; // 0.5 ether
+    const description = "My description"
+
+    const bounty1 = (
+      await bountyBuddyInstance.createBounty(description, {from: helen, value: amountWei})
+    ).logs[0].args.bountyId.toString(10)
+
+    const submission1 = (
+      await bountyBuddyInstance.createSubmission(bounty1, description, {from: susan})
+    ).logs[0].args.submissionId.toString(10)
+    
+    const acceptTx = await bountyBuddyInstance.acceptSubmission(bounty1, submission1, {from: helen})
+    
+    const oldBalanceWei = (await web3.eth.getBalance(susan)).toNumber();
+
+    const withdrawTx = await bountyBuddyInstance.withdrawBountyAmount(submission1, {from: susan})
+
+    assert.equal(withdrawTx.logs[0].event, "Paid", "Paid event should be emitted")
+
+    const gasPrice = (await web3.eth.getTransaction(withdrawTx.tx)).gasPrice;
+    const gasUsed = withdrawTx.receipt.gasUsed;
+    const gasTotal = gasPrice.mul(gasUsed);
+    const newBalanceWei = (await web3.eth.getBalance(susan)).toNumber();
+    const expectedWei = oldBalanceWei + amountWei - gasTotal;
+
+    assert.equal(newBalanceWei, expectedWei, "susan should have been paid");
+    
+    
   })
 
 });

@@ -66,18 +66,18 @@ contract BountyBuddy {
     }
 
     modifier mustBeAccepted(uint submissionId) {
-      require(submissions[submissionId].submissionState == SubmissionState.Accepted);
-      _;
+        require(submissions[submissionId].submissionState == SubmissionState.Accepted, "Submission must be Accepted to withdraw");
+        _;
     }
   
 
-    function createBounty(string description, uint amount) public returns(uint) {
+    function createBounty(string description) public payable returns(uint) {
         uint bountyId = bountyCount;
         emit Open(bountyId);
         bounties[bountyId] = Bounty({
             bountyId: bountyId,
             creator: msg.sender,
-            amount: amount,
+            amount: msg.value,
             description: description,
             numSubmissions: 0,
             bountyState: BountyState.Open
@@ -168,7 +168,14 @@ contract BountyBuddy {
         return true;
     }
 
-    function payBounty(uint bountyId, uint submissionId, uint amount)
+    function withdrawBountyAmount(uint submissionId) public mustBeAccepted(submissionId) returns(bool) {
+        require(msg.sender == submissions[submissionId].submitter);
+        uint bountyId = submissions[submissionId].bountyId;
+        submissions[submissionId].submitter.transfer(bounties[bountyId].amount);
+        submissions[submissionId].submissionState = SubmissionState.Paid;
+        emit Paid(bountyId, submissionId);
+        return true;
+    }
   
 
 }
