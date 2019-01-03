@@ -36,7 +36,7 @@ class CreateBounty extends Component {
   
     render() {
       if(!this.state.visible)
-        return null
+        return <input type="button" onClick={() => this.setState({visible: true})} value="Create a Bounty" />
       return (
         <form onSubmit={this.handleSubmit}>
           <label>

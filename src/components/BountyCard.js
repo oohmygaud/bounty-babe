@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import CreateSubmission from '../components/CreateSubmission';
+import SubmissionsList from '../components/SubmissionsList';
 
 export default class BountyCard extends Component {
     constructor(props) {
@@ -41,8 +43,9 @@ export default class BountyCard extends Component {
         <div>
             {
                 (this.state.visible) ?
-                <div>Submissions List
-                    
+                <div>{this.props.bounty.numSubmissions.toString()} Submissions - 
+                    <CreateSubmission contract={this.props.contract} bountyId={this.props.id} />
+
                 </div> : null
             }
         </div>

@@ -9,6 +9,7 @@ class DataContainer extends Component {
         super(props);
         this.state = {
             bounties: {},
+            submissions: {},
             loading: false,
             loaded: false,
             numBounties: -1
@@ -31,6 +32,8 @@ class DataContainer extends Component {
             openEvent.watch((error, result) => {
                 console.log("Open event", error, result);
                 this.getBountiesAndSubmissions();
+
+            // Watch for a submitted event    
             })
         })
     }
@@ -65,6 +68,23 @@ class DataContainer extends Component {
             this.setState(newState)
         })
 
+    }
+
+    fetchSubmission(id) {
+        this.BountyBuddy.deployed().then(instance => {
+            return instance.fetchSubmission(id)
+        }).then(result => {
+            let newState = Object.assign({}, this.state)
+            let submission = {
+                bountyId: result[0],
+                submissionId: result[1],
+                submitter: result[2],
+                description: result[3],
+                submissionState: result[4]
+            }
+            newState.submissions[id] = submission
+            this.setState(newState)
+        })
     }
 
     getBountyList() {
