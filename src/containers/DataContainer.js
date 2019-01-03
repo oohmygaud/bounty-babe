@@ -27,13 +27,26 @@ class DataContainer extends Component {
         this.getBountiesAndSubmissions();
 
         this.BountyBuddy.deployed().then(instance => {
-            var openEvent = instance.Open();
 
-            openEvent.watch((error, result) => {
+            instance.Open().watch((error, result) => {
                 console.log("Open event", error, result);
                 this.getBountiesAndSubmissions();
-
-            // Watch for a submitted event    
+            })
+            instance.Submitted().watch((error, result) => {
+                console.log("Submitted event", error, result);
+                this.getBountiesAndSubmissions();
+            })
+            instance.Accepted().watch((error, result) => {
+                console.log("Accepted event", error, result);
+                this.getBountiesAndSubmissions();
+            })
+            instance.Rejected().watch((error, result) => {
+                console.log("Rejected event", error, result);
+                this.getBountiesAndSubmissions();
+            })
+            instance.Paid().watch((error, result) => {
+                console.log("Paid event", error, result);
+                this.getBountiesAndSubmissions();
             })
         })
     }
@@ -66,6 +79,7 @@ class DataContainer extends Component {
             }
             newState.bounties[id] = bounty
             this.setState(newState)
+            this.fetchAllSubmissionsForBounty(bounty)
         })
 
     }
@@ -87,6 +101,23 @@ class DataContainer extends Component {
         })
     }
 
+    fetchAllSubmissionsForBounty(bounty) {
+        let index;
+        bounty.submissionIds = [];
+        for (index = 0; index < bounty.numSubmissions; index++) {
+            let fetchIndex = index;
+          this.BountyBuddy.deployed().then(instance => {
+            return instance.getBountySubmissionIdByIndex(bounty.bountyId.toNumber(), fetchIndex)
+          }).then(submissionId => {
+            this.fetchSubmission(submissionId)
+            bounty.submissionIds.push(submissionId)
+            let newState = Object.assign({}, this.state)
+            newState.bounties[bounty.bountyId] = bounty
+            this.setState(newState)
+          })
+        }
+    }
+
     getBountyList() {
         this.getBountyIdsList().map(id => {
             if(!this.state.bounties[id])
@@ -101,7 +132,7 @@ class DataContainer extends Component {
         this.getBountyList();
         return <div> loaded! {this.state.numBounties} Bounties
             <CreateBounty contract={this.BountyBuddy} />
-            <BountiesList contract={this.BountyBuddy} ids={this.getBountyIdsList()} bounties={this.state.bounties}/>
+            <BountiesList contract={this.BountyBuddy} ids={this.getBountyIdsList()} bounties={this.state.bounties} submissions={this.state.submissions}/>
          </div>
     }
 }

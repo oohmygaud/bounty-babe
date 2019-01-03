@@ -38,14 +38,15 @@ export default class BountyCard extends Component {
             <input type="button" onClick={() => this.setState({visible: true})} value="+" />
 
         }
-        {this.props.bounty.description}</h3></div>
+        {this.props.bounty.description}</h3>
+        By: {this.props.bounty.creator}</div>
         <div style={{float:"right"}}><h3>Amount: {this.props.bounty.amount.toString()} wei</h3></div>
         <div>
             {
                 (this.state.visible) ?
                 <div>{this.props.bounty.numSubmissions.toString()} Submissions - 
                     <CreateSubmission contract={this.props.contract} bountyId={this.props.id} />
-
+                    <SubmissionsList contract={this.props.contract} bounty={this.props.bounty} submissions={this.props.submissions}/>
                 </div> : null
             }
         </div>

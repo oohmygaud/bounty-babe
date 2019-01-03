@@ -8,7 +8,7 @@ class BountiesList extends Component {
             <div>
                 {
                     this.props.ids.map((id) => (
-                    <BountyCard key={id} id={id} contract={this.props.contract} bounty={this.props.bounties[id]}/>
+                    <BountyCard key={id} id={id} contract={this.props.contract} bounty={this.props.bounties[id]} submissions={this.props.submissions}/>
                     ))}
             </div>
         )
