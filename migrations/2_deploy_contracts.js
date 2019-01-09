@@ -1,5 +1,5 @@
-var BountyBuddy = artifacts.require("./BountyBuddy.sol");
+var BountyBabe = artifacts.require("./BountyBabe.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(BountyBuddy);
+  deployer.deploy(BountyBabe);
 };

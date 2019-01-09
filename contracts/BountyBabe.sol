@@ -1,8 +1,8 @@
 pragma solidity ^0.4.17;
 
-/** @title Bounty Buddy */
+/** @title Bounty Babe */
 /** @author Audrey Worsham */
-contract BountyBuddy {
+contract BountyBabe {
 
     uint bountyCount;
     uint submissionCount;

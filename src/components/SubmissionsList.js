@@ -7,7 +7,7 @@ class SubmissionsList extends Component {
         return (
             <div>
                 {
-                    this.props.bounty.submissionIds.map((id) => <SubmissionCard 
+                    (this.props.bounty.submissionIds || []).map((id) => <SubmissionCard 
                             key={id} id={id} 
                             contract={this.props.contract}
                             bounty={this.props.bounty} 

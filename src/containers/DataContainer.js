@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TruffleContract from 'truffle-contract';
-import BountyBuddyArtifact from '../../build/contracts/BountyBuddy.json';
+import BountyBabeArtifact from '../../build/contracts/BountyBabe.json';
 import CreateBounty from '../components/CreateBounty';
 import BountiesList from '../components/BountiesList';
 
@@ -10,7 +10,7 @@ class DataContainer extends Component {
         this.state = {
             bounties: {},
             submissions: {},
-            loading: false,
+            loading: true,
             loaded: false,
             numBounties: -1
 	    
@@ -22,11 +22,11 @@ class DataContainer extends Component {
     }
 
     getContractInstance() {
-        this.BountyBuddy = TruffleContract(BountyBuddyArtifact);
-        this.BountyBuddy.setProvider(window.web3.currentProvider);
+        this.BountyBabe = TruffleContract(BountyBabeArtifact);
+        this.BountyBabe.setProvider(window.web3.currentProvider);
         this.getBountiesAndSubmissions();
 
-        this.BountyBuddy.deployed().then(instance => {
+        this.BountyBabe.deployed().then(instance => {
 
             instance.Open().watch((error, result) => {
                 console.log("Open event", error, result);
@@ -52,11 +52,11 @@ class DataContainer extends Component {
     }
     
     getBountiesAndSubmissions() {
-        this.setState({loading: true});
-        this.BountyBuddy.deployed().then(function(instance) {
+        this.BountyBabe.deployed().then(function(instance) {
             return instance.getBountyCount.call();
         }).then(result => {
             this.setState({loading: false, loaded: true, numBounties: result.toNumber()})
+            this.getBountyList();
         });
     }
 
@@ -65,7 +65,7 @@ class DataContainer extends Component {
     }
 
     fetchBounty(id) {
-        this.BountyBuddy.deployed().then(instance => {
+        this.BountyBabe.deployed().then(instance => {
             return instance.fetchBounty(id)
         }).then(result => {
             let newState = Object.assign({}, this.state)
@@ -85,7 +85,7 @@ class DataContainer extends Component {
     }
 
     fetchSubmission(id) {
-        this.BountyBuddy.deployed().then(instance => {
+        this.BountyBabe.deployed().then(instance => {
             return instance.fetchSubmission(id)
         }).then(result => {
             let newState = Object.assign({}, this.state)
@@ -106,7 +106,7 @@ class DataContainer extends Component {
         bounty.submissionIds = [];
         for (index = 0; index < bounty.numSubmissions; index++) {
             let fetchIndex = index;
-          this.BountyBuddy.deployed().then(instance => {
+          this.BountyBabe.deployed().then(instance => {
             return instance.getBountySubmissionIdByIndex(bounty.bountyId.toNumber(), fetchIndex)
           }).then(submissionId => {
             this.fetchSubmission(submissionId)
@@ -120,7 +120,7 @@ class DataContainer extends Component {
 
     getBountyList() {
         this.getBountyIdsList().map(id => {
-            if(!this.state.bounties[id])
+            // if(!this.state.bounties[id])
                 return this.fetchBounty(id)
             return null
         })
@@ -129,10 +129,9 @@ class DataContainer extends Component {
     render() {
         if (this.state.loading || !this.state.loaded)
             return <div>loading...</div>
-        this.getBountyList();
         return <div> loaded! {this.state.numBounties} Bounties
-            <CreateBounty contract={this.BountyBuddy} />
-            <BountiesList contract={this.BountyBuddy} ids={this.getBountyIdsList()} bounties={this.state.bounties} submissions={this.state.submissions}/>
+            <CreateBounty contract={this.BountyBabe} />
+            <BountiesList contract={this.BountyBabe} ids={this.getBountyIdsList()} bounties={this.state.bounties} submissions={this.state.submissions}/>
          </div>
     }
 }

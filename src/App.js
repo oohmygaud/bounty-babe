@@ -12,7 +12,7 @@ class App extends Component {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
-          <Link to="/" className="pure-menu-heading pure-menu-link">BountyBuddy By Audrey</Link>
+          <Link to="/" className="pure-menu-heading pure-menu-link">BountyBabe By Audrey</Link>
           <ul className="pure-menu-list navbar-right">
           <span>
         <li className="pure-menu-item">
