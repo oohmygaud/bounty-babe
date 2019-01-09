@@ -7,6 +7,7 @@ contract BountyBabe {
     uint bountyCount;
     uint submissionCount;
     address admin;
+    bool private stopped = false;
 
     mapping(uint => Bounty) public bounties;
     mapping(uint => Submission) public submissions;
@@ -80,12 +81,38 @@ contract BountyBabe {
         require(submissions[submissionId].submissionState == SubmissionState.Accepted, "Submission must be in Accepted state");
         _;
     }
-  
+
+    // Making sure all actions in the contract are suspended if a bug is discovered
+    modifier stopInEmergency {
+        require(!stopped, "Emergency stop is enabled, this function is disabled");
+        _;
+    }
+
+    // Making sure the bounty creator can still withdraw funds if a bug is discovered
+    modifier onlyInEmergency {
+        require(stopped, "Can only be called in an emergency");
+        _;
+    }
+
+    // Making sure only the admin can access certain functions
+    modifier isAdmin() {
+        require(msg.sender == admin, "Only the admin can perform this function");
+        _;
+    }
+
+
+    /**  @dev Makes sure only the admin can stop the contract
+      */
+    function toggleContractActive() public isAdmin {
+        stopped = !stopped;
+    }
+
     /** @dev Creates a bounty
       * @param description Description of the bounty being created
       * @return The Id of the bounty created
       */
-    function createBounty(string description) public payable returns(uint) {
+    function createBounty(string description) public payable stopInEmergency() returns(uint) {
+        require(msg.value > 0, "The amount is invalid");
         uint bountyId = bountyCount;
         emit Open(bountyId);
         bounties[bountyId] = Bounty({
@@ -106,7 +133,12 @@ contract BountyBabe {
       * @param description Description of the submission being created
       * @return The Id of the submission created
       */
-    function createSubmission(uint bountyId, string description) public bountyMustBeOpen(bountyId) returns(uint) {
+    function createSubmission(uint bountyId, string description)
+        public
+        bountyMustBeOpen(bountyId)
+        stopInEmergency()
+        returns(uint)
+    {
         uint submissionId = submissionCount;
         uint submissionIndex = bounties[bountyId].numSubmissions;
         
@@ -238,6 +270,7 @@ contract BountyBabe {
         mustBeSubmitted(submissionId)
         onlyBountyOwner(bountyId)
         bountyMustBeOpen(bountyId)
+        stopInEmergency()
         returns (bool) 
     {
         submissions[submissionId].submissionState = SubmissionState.Accepted;
@@ -257,6 +290,7 @@ contract BountyBabe {
         mustBeSubmitted(submissionId)
         onlyBountyOwner(bountyId)
         bountyMustBeOpen(bountyId)
+        stopInEmergency()
         returns (bool)
     {
         submissions[submissionId].submissionState = SubmissionState.Rejected;
@@ -275,6 +309,27 @@ contract BountyBabe {
         submissions[submissionId].submissionState = SubmissionState.Paid;
         emit Paid(bountyId, submissionId);
         return true;
+    }
+
+    /** @dev The creator of a bounty can withdraw his funds
+      * @param bountyId The id of the bounty
+      * @return True if the funds were withdrawn
+      */
+    function emergencyWithdraw(uint bountyId)
+        public 
+        onlyInEmergency()
+        onlyBountyOwner(bountyId)
+        bountyMustBeOpen(bountyId)
+        returns(bool)
+    {
+        bounties[bountyId].creator.transfer(bounties[bountyId].amount);
+        bounties[bountyId].bountyState = BountyState.Closed;
+        return true;
+    }
+
+    // Fallback function
+    function() public payable { 
+        require(false, "No message data -- fallback function failed");
     }
 
 }
