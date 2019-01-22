@@ -6,7 +6,8 @@ Bounty Babe includes the solidity contract, truffle javascript tests, and a reac
 
 # Getting Started Locally
 
-You need ganache-cli installed, instructions not included here. Run `ganache-cli` in one terminal window. Migrate contracts to the system by opening another terminal window and enter `truffle migrate`. Then enter `truffle deploy`. To run the web interface, ensure prerequisites are installed with `npm install` and then just `npm start` -- note that you must have the Metamask browser extension installed to use the web interface.
+First, clone the project to your computer by running `git clone git@github.com:oohmygaud/bounty-babe.git` in a terminal window.
+To install ganache-cli, run `npm install -g ganache-cli`. Next, install truffle by entering `npm install -g truffle`. Next enter `npm install -g truffle-hdwallet-provider`. Run `ganache-cli` in one terminal window. Migrate contracts to the system by opening another terminal window and enter `truffle migrate`. Then enter `truffle deploy`. To run the web interface, ensure prerequisites are installed with `npm install` and then just `npm start` -- note that you must have the Metamask browser extension installed to use the web interface.
 
 # Running the tests
 

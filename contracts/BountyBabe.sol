@@ -1,9 +1,11 @@
-pragma solidity ^0.4.17;
+pragma solidity ^0.5.0;
+import "./SafeMath.sol";
 
 /** @title Bounty Babe */
 /** @author Audrey Worsham */
 contract BountyBabe {
 
+    using SafeMath for uint;
     uint bountyCount;
     uint submissionCount;
     address admin;
@@ -29,7 +31,7 @@ contract BountyBabe {
 
     struct Bounty {
         uint bountyId;
-        address creator;
+        address payable creator;
         uint amount;
         string description;
         uint numSubmissions;
@@ -39,7 +41,7 @@ contract BountyBabe {
     struct Submission {
         uint bountyId;
         uint submissionId;
-        address submitter;
+        address payable submitter;
         string description;
         SubmissionState submissionState;
 
@@ -111,7 +113,7 @@ contract BountyBabe {
       * @param description Description of the bounty being created
       * @return The Id of the bounty created
       */
-    function createBounty(string description) public payable stopInEmergency() returns(uint) {
+    function createBounty(string memory description) public payable stopInEmergency() returns(uint) {
         require(msg.value > 0, "The amount is invalid");
         uint bountyId = bountyCount;
         emit Open(bountyId);
@@ -123,7 +125,7 @@ contract BountyBabe {
             numSubmissions: 0,
             bountyState: BountyState.Open
         });
-        bountyCount = bountyCount + 1;
+        bountyCount = bountyCount.add(1);
         users_bounties[msg.sender].push(bountyId);
         return bountyId;
     }
@@ -133,7 +135,7 @@ contract BountyBabe {
       * @param description Description of the submission being created
       * @return The Id of the submission created
       */
-    function createSubmission(uint bountyId, string description)
+    function createSubmission(uint bountyId, string memory description)
         public
         bountyMustBeOpen(bountyId)
         stopInEmergency()
@@ -153,8 +155,8 @@ contract BountyBabe {
         });
         
         bounties_submissions[bountyId][submissionIndex] = submissionId;
-        submissionCount = submissionCount + 1;
-        bounties[bountyId].numSubmissions = bounties[bountyId].numSubmissions + 1;
+        submissionCount = submissionCount.add(1);
+        bounties[bountyId].numSubmissions = bounties[bountyId].numSubmissions.add(1);
         return submissionId;
     }
 
@@ -213,7 +215,7 @@ contract BountyBabe {
             uint bountyId,
             address creator,
             uint amount,
-            string description,
+            string memory description,
             uint numSubmissions,
             uint bountyState
         )
@@ -240,7 +242,7 @@ contract BountyBabe {
             uint bountyId,
             uint submissionId,
             address submitter,
-            string description,
+            string memory description,
             uint submissionState
         ) 
     {
@@ -328,7 +330,7 @@ contract BountyBabe {
     }
 
     // Fallback function
-    function() public payable { 
+    function() external payable { 
         require(false, "No message data -- fallback function failed");
     }
 
