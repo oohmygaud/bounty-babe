@@ -17,11 +17,11 @@ export default class BountyCard extends Component {
         let color;
         if (this.props.bounty.bountyState.toString() === "0")
         {
-          color = "#c9ff9b"
+          color = "#c098ab"
         }
         else
         {
-          color = "#fca49c"
+          color = "#79466f"
         }
         return <div style={{
             width:"100%",
@@ -40,7 +40,10 @@ export default class BountyCard extends Component {
         }
         {this.props.bounty.description}</h3>
         By: {this.props.bounty.creator}</div>
-        <div style={{float:"right"}}><h3>Amount: {this.props.bounty.amount.toString()} wei</h3></div>
+        <div style={{float:"right"}}>
+            <h3>Amount: {this.props.bounty.amount.toString()} wei</h3>
+            {this.props.bounty.bountyState == 0 ? "Open" : "Closed"}
+        </div>
         <div>
             {
                 (this.state.visible) ?

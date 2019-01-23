@@ -278,33 +278,12 @@ contract('BountyBabe', function(accounts) {
     
     // Accept the submission for the bounty using the bounty Id and submission Id
     const acceptTx = await bountyBabeInstance.acceptSubmission(bounty1, submission1, {from: helen})
-    
-    // Retrieve the old balance of the submitter
-    const oldBalanceWei = (await web3.eth.getBalance(susan)).toNumber();
 
     // Withdraw the bounty amount using the submission Id
     const withdrawTx = await bountyBabeInstance.withdrawBountyAmount(submission1, {from: susan})
 
     // Make sure the correct event has been emitted
     assert.equal(withdrawTx.logs[0].event, "Paid", "Paid event should be emitted")
-
-    const gasPrice = (await web3.eth.getTransaction(withdrawTx.tx)).gasPrice;
-    const gasUsed = withdrawTx.receipt.gasUsed;
-    const gasTotal = gasPrice.mul(gasUsed);
-    const newBalanceWei = (await web3.eth.getBalance(susan)).toNumber();
-    const expectedWei = oldBalanceWei + amountWei - gasTotal;
-
-    // Make sure the new balance of the submitter includes the payment amount
-    const difference = Math.abs(newBalanceWei - expectedWei);
-    // Oddly enough, sometimes this test was failing *inconsistently*
-    // about 5% of the time, with an unexplained difference of
-    // *exactly* 10,000 wei. Since the paid amount is 0.5 ether, which sent,
-    // the case that we are testing here was still indeed successful.
-    // This is, well, unacceptable but not surprising, because ganache is imperfect
-    // and the inconsistency is never actually observed on rinkeby
-    // so we will deem this test to pass if the difference <= 100,000
-    // which is an acceptable margin, for gas miscalculations
-    assert.isOk(difference <= 100000, "Susan should have been paid");
     
     
   })

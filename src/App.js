@@ -8,6 +8,30 @@ import './css/pure-min.css'
 import './App.css'
 
 class App extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      hasWeb3 : false,
+      account : null
+    }
+
+  }
+
+  componentWillMount() {
+    this.loadAccounts()
+    setTimeout(() => this.loadAccounts(), 500)
+    setTimeout(() => this.loadAccounts(), 1000)
+  }
+
+  loadAccounts() {
+    if(window.web3.eth.accounts[0] !== this.state.account)
+      this.setState({
+        hasWeb3: true,
+        account: window.web3.eth.accounts[0]
+      })
+  }
+
   render() {
     return (
       <div className="App">
@@ -15,11 +39,8 @@ class App extends Component {
           <Link to="/" className="pure-menu-heading pure-menu-link">BountyBabe By Audrey</Link>
           <ul className="pure-menu-list navbar-right">
           <span>
-        <li className="pure-menu-item">
-          <Link to="/dashboard" className="pure-menu-link">Dashboard</Link>
-        </li>
-        <li className="pure-menu-item">
-          <Link to="/profile" className="pure-menu-link">Profile</Link>
+        <li className="pure-menu-item" style={{fontSize: "70%", color: "white"}}>
+          Your Address: {window.web3.eth.accounts[0]}
         </li>
       </span>
           </ul>

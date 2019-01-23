@@ -1,0 +1,572 @@
+[
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "bounties_submissions",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x0fb2426c"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "submissions",
+    "outputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "name": "submitter",
+        "type": "address"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "submissionState",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xad73349e"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "users_bounties",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xcf9d3fd7"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "bounties",
+    "outputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "numSubmissions",
+        "type": "uint256"
+      },
+      {
+        "name": "bountyState",
+        "type": "uint8"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xdc2f8744"
+  },
+  {
+    "inputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "constructor",
+    "signature": "constructor"
+  },
+  {
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "fallback"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "bountyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Open",
+    "type": "event",
+    "signature": "0x9648cf7f2eb86b564ae3c4a466bc03e87267933667490eb8737a5a3f2a9b284d"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "bountyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Closed",
+    "type": "event",
+    "signature": "0x6cc09e7b5c3e49861ebe8f6867e1618fbfc14c8d0e968fde37c4243ca02a6f83"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Submitted",
+    "type": "event",
+    "signature": "0xd55e7566f1a8979f4d491faa170e9eb764d7e6bb582f1db922a4b7876c42225a"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Accepted",
+    "type": "event",
+    "signature": "0xb76abbe4f718d3a5437da4640abcd02e3a2e2975873bd4b168d55f8df507780b"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Rejected",
+    "type": "event",
+    "signature": "0x5303d327e6fbcf486f11a1638b93f30487213df5241a4daa219aaa44f1bab587"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "Paid",
+    "type": "event",
+    "signature": "0xef53713ee4f072f79f4d516084e3f4d15f2cde709d2091235b37ae719c272dd6"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "toggleContractActive",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x1385d24c"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "description",
+        "type": "string"
+      }
+    ],
+    "name": "createBounty",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function",
+    "signature": "0x06868c4b"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      }
+    ],
+    "name": "createSubmission",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xa5e99c4e"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getBountyCount",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x06641f7e"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getSubmissionCount",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x9999d2ae"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBountySubmissionCount",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xabe13269"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBountySubmissionIdByIndex",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0xbd0738f0"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "who",
+        "type": "address"
+      },
+      {
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getUserBountyIdByIndex",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x4c5d82f1"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_bountyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "fetchBounty",
+    "outputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "numSubmissions",
+        "type": "uint256"
+      },
+      {
+        "name": "bountyState",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x77ca8117"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "fetchSubmission",
+    "outputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      },
+      {
+        "name": "submitter",
+        "type": "address"
+      },
+      {
+        "name": "description",
+        "type": "string"
+      },
+      {
+        "name": "submissionState",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x61c3b40d"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_who",
+        "type": "address"
+      }
+    ],
+    "name": "userNumBounties",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "signature": "0x1c59f28b"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "acceptSubmission",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xb1804ffb"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      },
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "rejectSubmission",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0xd866164d"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "submissionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawBountyAmount",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x47218725"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "bountyId",
+        "type": "uint256"
+      }
+    ],
+    "name": "emergencyWithdraw",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function",
+    "signature": "0x5312ea8e"
+  }
+]

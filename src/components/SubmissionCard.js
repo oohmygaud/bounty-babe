@@ -32,21 +32,21 @@ export default class SubmissionCard extends Component {
         if (!this.props.submission)
           return <div>loading...</div>
 
-        let color = "#d6e4f9";
+        let color = "#fdffe2";
 
         if (this.props.submission.submissionState.toString() === "1")
         {
-          color = "#c9ff9b"
+          color = "#cfebcc"
         };
 
         if (this.props.submission.submissionState.toString() === "2")
         {
-          color = "#fca49c"
+          color = "#abb6cd"
         };
 
         if (this.props.submission.submissionState.toString() === "3")
         {
-          color = "#3b993a"
+          color = "#cfebcc"
         };
 
         let showControls = (this.props.bounty.bountyState.toNumber() === 0
@@ -55,6 +55,16 @@ export default class SubmissionCard extends Component {
 
         let showPayout = (this.props.submission.submissionState.toNumber() === 1
             && window.web3.eth.accounts[0] === this.props.submission.submitter);
+
+        let stateDisplay;
+        if(this.props.submission.submissionState == 0)
+            stateDisplay = "Submitted";
+        if(this.props.submission.submissionState == 1)
+            stateDisplay = "Accepted";
+        if(this.props.submission.submissionState == 2)
+            stateDisplay = "Rejected";
+        if(this.props.submission.submissionState == 3)
+            stateDisplay = "Paid";
 
         return (
           <div style={{
@@ -68,6 +78,9 @@ export default class SubmissionCard extends Component {
         {this.props.submission.description}
         <br />
         By: {this.props.submission.submitter}
+        <div style={{float:"right"}}>
+            {stateDisplay}
+        </div>
 
         {showControls ? <div>
           <input type="button" onClick={() => this.acceptSubmission()} value="Accept" />

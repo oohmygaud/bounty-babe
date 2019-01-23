@@ -14,7 +14,7 @@ module.exports = {
         return new HDWalletProvider(mnemonic,
           "https://rinkeby.infura.io/v3/72b574db820841cab063fd946c07a5fa");
       },
-      network_id: 1
+      network_id: 4
     }
   }
 };
