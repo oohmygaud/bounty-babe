@@ -21,7 +21,7 @@ class App extends Component {
   componentWillMount() {
     this.loadAccounts()
     setTimeout(() => this.loadAccounts(), 500)
-    setTimeout(() => this.loadAccounts(), 1000)
+    setInterval(() => this.loadAccounts(), 1000)
   }
 
   loadAccounts() {
@@ -33,6 +33,8 @@ class App extends Component {
   }
 
   render() {
+    if(!this.state.hasWeb3)
+      return <div><h3 style={{color: 'red'}}>Not connected...</h3></div>
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
@@ -40,7 +42,7 @@ class App extends Component {
           <ul className="pure-menu-list navbar-right">
           <span>
         <li className="pure-menu-item" style={{fontSize: "70%", color: "white"}}>
-          Your Address: {window.web3.eth.accounts[0]}
+          Your Address: {window.web3.eth.accounts[0] || "Please log in to metamask"}
         </li>
       </span>
           </ul>
