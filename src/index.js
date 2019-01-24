@@ -1,20 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
+//import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
-import { syncHistoryWithStore } from 'react-router-redux'
+//import { syncHistoryWithStore } from 'react-router-redux'
 
 // Layouts
 import App from './App'
-import Home from './layouts/home/Home'
+//import Home from './layouts/home/Home'
 import Dashboard from './layouts/dashboard/Dashboard'
-import Profile from './user/layouts/profile/Profile'
+//import Profile from './user/layouts/profile/Profile'
 
 // Redux Store
 import store from './store'
 
-const history = syncHistoryWithStore(browserHistory, store)
+//const history = syncHistoryWithStore(browserHistory, store)
 
+ReactDOM.render((
+  <Provider store={store}>
+    <App>
+      <Dashboard />
+    </App>
+  </Provider>
+), document.getElementById('root'))
+
+/*
 ReactDOM.render((
     <Provider store={store}>
       <Router history={history} basename={"/bounty-babe"}>
@@ -28,3 +37,4 @@ ReactDOM.render((
   ),
   document.getElementById('root')
 )
+*/
