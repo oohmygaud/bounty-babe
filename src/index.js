@@ -17,7 +17,7 @@ const history = syncHistoryWithStore(browserHistory, store)
 
 ReactDOM.render((
     <Provider store={store}>
-      <Router history={history}>
+      <Router history={history} basename={"/bounty-babe"}>
         <Route path="/" component={App}>
           <IndexRoute component={Home} />
           <Route path="dashboard" component={Dashboard} />
