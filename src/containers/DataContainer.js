@@ -127,8 +127,9 @@ class DataContainer extends Component {
 
     render() {
         if (this.state.loading || !this.state.loaded)
-            return <div>loading...</div>
-        return <div> loaded! {this.state.numBounties} Bounties
+            return <div><br />loading... is your <b>Metamask</b> connected to <b>Rinkeby?</b></div>
+        return <div> <br /> loaded! {this.state.numBounties} Bounties
+            &nbsp;
             <CreateBounty contract={this.BountyBabe} />
             <BountiesList contract={this.BountyBabe} ids={this.getBountyIdsList()} bounties={this.state.bounties} submissions={this.state.submissions}/>
          </div>

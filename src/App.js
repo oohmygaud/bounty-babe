@@ -41,7 +41,7 @@ class App extends Component {
           <Link to="/" className="pure-menu-heading pure-menu-link">BountyBabe By Audrey</Link>
           <ul className="pure-menu-list navbar-right">
           <span>
-        <li className="pure-menu-item" style={{fontSize: "70%", color: "white"}}>
+        <li className="pure-menu-item" style={{fontSize: "85%", color: "white"}}>
           Your Address: {window.web3.eth.accounts[0] || "Please log in to metamask"}
         </li>
       </span>
