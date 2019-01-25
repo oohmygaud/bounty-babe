@@ -23,6 +23,10 @@ export default class BountyCard extends Component {
         {
           color = "#79466f"
         }
+
+        var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        let descriptionWithLinks = this.props.bounty.description.replace(exp,"<a href='$1'>$1</a>");
+
         return <div style={{
             width:"100%",
             margin:5,
@@ -38,7 +42,8 @@ export default class BountyCard extends Component {
             <input type="button" onClick={() => this.setState({visible: true})} value="+" />
 
         }
-        {this.props.bounty.description}</h3>
+        <span dangerouslySetInnerHTML={{__html: descriptionWithLinks}} />
+        </h3>
         By: {this.props.bounty.creator}</div>
         <div style={{float:"right"}}>
             <h3>Amount: {this.props.bounty.amount.toString()} wei</h3>

@@ -34,17 +34,17 @@ export default class SubmissionCard extends Component {
 
         let color = "#fdffe2";
 
-        if (this.props.submission.submissionState.toString() === "1")
+        if (this.props.submission.submissionState.toString() == "1")
         {
           color = "#cfebcc"
         };
 
-        if (this.props.submission.submissionState.toString() === "2")
+        if (this.props.submission.submissionState.toString() == "2")
         {
           color = "#abb6cd"
         };
 
-        if (this.props.submission.submissionState.toString() === "3")
+        if (this.props.submission.submissionState.toString() == "3")
         {
           color = "#cfebcc"
         };

@@ -14,7 +14,7 @@ class DataContainer extends Component {
             loaded: false,
             numBounties: -1
 	    
-	};
+	    };
     }
 
     componentWillMount() {
@@ -61,7 +61,7 @@ class DataContainer extends Component {
     }
 
     getBountyIdsList() {
-        return [...Array(this.state.numBounties).keys()];
+        return [...Array(this.state.numBounties).keys()].reverse();
     }
 
     fetchBounty(id) {
@@ -122,7 +122,6 @@ class DataContainer extends Component {
         this.getBountyIdsList().map(id => {
             // if(!this.state.bounties[id])
                 return this.fetchBounty(id)
-            return null
         })
     }
 
